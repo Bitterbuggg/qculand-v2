@@ -38,7 +38,6 @@ export default function InteractiveBuilding({
   const handlePointerOver = (e) => {
     if (!isInteractable) return;
     e.stopPropagation();
-    // setHovered(true);
     document.body.style.cursor = 'pointer';
     
     clonedScene.traverse((child) => {
@@ -51,7 +50,6 @@ export default function InteractiveBuilding({
   const handlePointerOut = (e) => {
     if (!isInteractable) return;
     e.stopPropagation();
-    // setHovered(false);
     document.body.style.cursor = 'default';
     
     clonedScene.traverse((child) => {
