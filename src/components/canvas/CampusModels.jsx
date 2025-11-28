@@ -2,7 +2,7 @@ import React from 'react';
 import { useGLTF } from '@react-three/drei';
 import InteractiveBuilding from './InteractiveBuilding';
 
-export default function QcuMapModels({ onBuildingClick, campusEntered }) {
+export default function CampusModels({ onBuildingClick, campusEntered }) {
   // Load the base map (non-interactive terrain/paths)
   const baseMap = useGLTF('./models/qcu_base.glb');
 
