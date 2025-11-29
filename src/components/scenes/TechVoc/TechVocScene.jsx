@@ -163,7 +163,7 @@ export default function TechVocScene({ onExit }) {
 
         <Computer position={computerPos} />
 
-        <Character targetPosition={playerTarget} controlsRef={controlsRef} scale={0.009} />
+        <Character targetPosition={playerTarget} controlsRef={controlsRef} scale={0.04} />
         
         <GameTrigger 
           playerControls={controlsRef} 
