@@ -2,8 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+// Avoid React.StrictMode because it mounts/unmounts <Canvas> twice in dev,
+// which can trigger WebGL context loss in three.js.
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);

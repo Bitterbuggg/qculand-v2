@@ -3,9 +3,11 @@ import { useGLTF, useAnimations } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-export default function Character({ targetPosition, controlsRef }) {
+const ASSET_BASE = import.meta.env.BASE_URL || '/';
+
+export default function Character({ targetPosition, controlsRef, scale = 0.003 }) {
   const group = useRef();
-  const { scene, animations } = useGLTF('./models/qcu_student_4.glb');
+  const { scene, animations } = useGLTF(`${ASSET_BASE}models/qcu_student_4.glb`);
   const { actions, names } = useAnimations(animations, group);
   const [currentAction, setCurrentAction] = useState('Idle');
 
@@ -72,5 +74,8 @@ export default function Character({ targetPosition, controlsRef }) {
     }
   });
 
-  return <primitive ref={group} object={scene} scale={0.003} />;
+  return <primitive ref={group} object={scene} scale={scale} />;
 }
+
+// Preload character model to avoid hitching when it first appears.
+useGLTF.preload(`${ASSET_BASE}models/qcu_student_4.glb`);

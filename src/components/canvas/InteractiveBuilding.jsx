@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { useGLTF } from '@react-three/drei';
 
 export default function InteractiveBuilding({ 
@@ -6,16 +6,15 @@ export default function InteractiveBuilding({
   position, 
   rotation = [0, 0, 0],
   scale = 1,
-  isInteractable = true, 
-  onClick 
+  onClick,
+  onHover,
+  onHoverOut
 }) {
   const { scene } = useGLTF(modelPath);
 
-  // Clone the scene for this specific instance
+  // Clone the scene for this specific instance and its materials
   const clonedScene = useMemo(() => {
     const clone = scene.clone(true);
-    
-    // Clone materials for this instance so each building has independent materials
     clone.traverse((child) => {
       if (child.isMesh) {
         if (Array.isArray(child.material)) {
@@ -23,23 +22,42 @@ export default function InteractiveBuilding({
         } else if (child.material) {
           child.material = child.material.clone();
         }
-        
         // Store original emissive for this instance
         if (child.material.emissive) {
           child.userData.originalEmissive = child.material.emissive.clone();
         }
       }
     });
-    
     return clone;
   }, [scene]);
 
-  // Handle hover effect
+  // Clean up cloned materials on unmount
+  useEffect(() => {
+    return () => {
+      clonedScene.traverse((child) => {
+        if (child.isMesh) {
+          if (Array.isArray(child.material)) {
+            child.material.forEach(m => m.dispose());
+          } else if (child.material) {
+            child.material.dispose();
+          }
+        }
+      });
+    };
+  }, [clonedScene]);
+
+  // Ensure cursor resets if component unmounts while hovered.
+  useEffect(() => {
+    return () => {
+      document.body.style.cursor = 'default';
+    };
+  }, []);
+
   const handlePointerOver = (e) => {
-    if (!isInteractable) return;
     e.stopPropagation();
     document.body.style.cursor = 'pointer';
-    
+    if (onHover) onHover();
+
     clonedScene.traverse((child) => {
       if (child.isMesh && child.material.emissive) {
         child.material.emissive.setHex(0x4488ff);
@@ -48,10 +66,10 @@ export default function InteractiveBuilding({
   };
 
   const handlePointerOut = (e) => {
-    if (!isInteractable) return;
     e.stopPropagation();
     document.body.style.cursor = 'default';
-    
+    if (onHoverOut) onHoverOut();
+
     clonedScene.traverse((child) => {
       if (child.isMesh && child.userData.originalEmissive) {
         child.material.emissive.copy(child.userData.originalEmissive);
@@ -60,23 +78,21 @@ export default function InteractiveBuilding({
   };
 
   const handleClick = (e) => {
-    if (!isInteractable) return;
     e.stopPropagation();
     onClick?.();
   };
 
   return (
-    <primitive
-      object={clonedScene}
+    <group
       position={position}
       rotation={rotation}
       scale={scale}
-      {...(isInteractable && {
-        onPointerOver: handlePointerOver,
-        onPointerOut: handlePointerOut,
-        onClick: handleClick
-      })}
-    />
+      onClick={handleClick}
+      onPointerOver={handlePointerOver}
+      onPointerOut={handlePointerOut}
+    >
+      <primitive object={clonedScene} />
+    </group>
   );
 }
 

@@ -1,38 +1,38 @@
 export const buildingConfigs = {
-  "techvoc": {
+  techvoc: {
     name: "TechVoc Building",
-    icon: "🔧",
-    description: "Technical and vocational training center.",
+    icon: "🛠️",
+    description: "Technical and vocational training center with workshops and labs.",
     canEnter: true
   },
   "yellow-building": {
     name: "Yellow Building",
-    icon: "🏫",
-    description: "Classroom and lecture halls.",
+    icon: "📚",
+    description: "Classrooms and lecture halls for general education courses.",
     canEnter: true
   },
   "admin-building": {
     name: "Admin Building",
-    icon: "🏢",
-    description: "Administration and faculty offices.",
+    icon: "🏛️",
+    description: "Administration and faculty offices; student services hub.",
     canEnter: true
   },
-  "bautista": {
+  bautista: {
     name: "Bautista Hall",
-    icon: "📚",
-    description: "Academic building for various departments.",
+    icon: "🎓",
+    description: "Academic building for multiple departments and faculty rooms.",
     canEnter: true
   },
   "computer-lab": {
     name: "Computer Lab",
     icon: "💻",
-    description: "Computer science lab with modern equipment.",
+    description: "Computer science labs with modern equipment and study spaces.",
     canEnter: true
   },
   "cube010-building": {
     name: "Main Hall",
-    icon: "🏛️",
-    description: "Large multipurpose building.",
+    icon: "🏢",
+    description: "Large multipurpose hall for events, lectures, and gatherings.",
     canEnter: true
   }
 };

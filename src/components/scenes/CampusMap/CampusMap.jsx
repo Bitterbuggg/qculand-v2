@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion as Motion } from "framer-motion";
 import { OrbitControls } from "@react-three/drei";
 import { MOUSE } from "three";
 
@@ -9,9 +9,10 @@ import Character from "../../canvas/Character";
 import BuildingModal from "../../ui/BuildingModal";
 import { buildingConfigs } from "../../../data/buildings";
 
-export default function CampusMap() {
+export default function CampusMap({ onEnterBuilding }) {
   const [showBuildingModal, setShowBuildingModal] = useState(null);
   const [playerTarget, setPlayerTarget] = useState({ x: 0, y: 0, z: 5 });
+  const [hoveredBuilding, setHoveredBuilding] = useState(null); // State for hovered building
   const controlsRef = useRef();
 
   const handleBuildingClick = (buildingId) => {
@@ -22,41 +23,83 @@ export default function CampusMap() {
     setPlayerTarget(point);
   };
 
-  const handleEnterBuilding = (buildingId) => {
+  const handleEnterBuilding = () => {
+    if (onEnterBuilding && showBuildingModal) {
+      onEnterBuilding(showBuildingModal);
+    }
     setShowBuildingModal(null);
-    console.log(`Entering building: ${buildingId}`);
   };
 
   const handleCloseModal = () => {
     setShowBuildingModal(null);
   };
 
+  // Hover handlers
+  const handleBuildingHover = (buildingId) => {
+    setHoveredBuilding(buildingId);
+  };
+
+  const handleBuildingHoverOut = () => {
+    setHoveredBuilding(null);
+  };
+
   return (
-    <div className="w-full h-full fixed top-0 left-0">
-      <Canvas shadows camera={{ position: [0, 5, 10], fov: 55 }}>
-        <color attach="background" args={["#a8d0ff"]} />
-        <ambientLight intensity={0.6} />
-        <directionalLight position={[5, 10, 5]} intensity={1} castShadow />
+    <>
+      <div className="w-full h-full fixed top-0 left-0">
+        <Canvas
+          shadows
+          camera={{ position: [0, 5, 10], fov: 55 }}
+          // Cap DPR to reduce GPU memory and avoid WebGL context loss on low-end devices.
+          dpr={[1, 1.5]}
+          gl={{ powerPreference: "high-performance" }}
+        >
+          <color attach="background" args={["#a8d0ff"]} />
+          <ambientLight intensity={0.6} />
+          <directionalLight position={[5, 10, 5]} intensity={1} castShadow />
 
-        <OrbitControls 
-          ref={controlsRef}
-          enablePan={false}
-          rotateSpeed={0.4}
-          mouseButtons={{
-            LEFT: null,
-            MIDDLE: MOUSE.DOLLY,
-            RIGHT: MOUSE.ROTATE
-          }}
-        />
+          <OrbitControls 
+            ref={controlsRef}
+            enablePan={false}
+            rotateSpeed={0.4}
+            mouseButtons={{
+              LEFT: null,
+              MIDDLE: MOUSE.DOLLY,
+              RIGHT: MOUSE.ROTATE
+            }}
+          />
 
-        <CampusModels 
-          onBuildingClick={handleBuildingClick} 
-          onFloorClick={handleFloorClick}
-        />
-        
-        <Character targetPosition={playerTarget} controlsRef={controlsRef} />
-        
-      </Canvas>
+          <CampusModels 
+            onBuildingClick={handleBuildingClick} 
+            onFloorClick={handleFloorClick}
+            onBuildingHover={handleBuildingHover} // Pass hover handlers
+            onBuildingHoverOut={handleBuildingHoverOut} // Pass hover handlers
+          />
+          
+          <Character targetPosition={playerTarget} controlsRef={controlsRef} />
+          
+        </Canvas>
+      </div>
+
+      {/* Building Name Hover Overlay (Bottom Center) */}
+      <AnimatePresence>
+        {hoveredBuilding && buildingConfigs[hoveredBuilding] && (
+          <Motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.2 }}
+            className="absolute bottom-10 left-1/2 transform -translate-x-1/2 pointer-events-none z-40"
+          >
+            <div className="bg-black/70 backdrop-blur-sm text-white px-6 py-3 rounded-full shadow-lg border border-white/20">
+              <h3 className="text-lg font-bold flex items-center gap-2">
+                <span>{buildingConfigs[hoveredBuilding].icon}</span>
+                {buildingConfigs[hoveredBuilding].name}
+              </h3>
+            </div>
+          </Motion.div>
+        )}
+      </AnimatePresence>
+
 
       {/* Building Entry Modal */}
       <AnimatePresence>
@@ -64,10 +107,10 @@ export default function CampusMap() {
           <BuildingModal 
             config={buildingConfigs[showBuildingModal]}
             onClose={handleCloseModal}
-            onEnter={() => handleEnterBuilding(showBuildingModal)}
+            onEnter={handleEnterBuilding}
           />
         )}
       </AnimatePresence>
-    </div>
+    </>
   );
 }
