@@ -3,6 +3,12 @@ import { createPortal } from 'react-dom';
 import { motion as Motion } from 'framer-motion';
 
 export default function BuildingModal({ config, onClose, onEnter }) {
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
   if (!config) return null;
   const titleId = `building-modal-title-${config.id || 'default'}`;
   const descId = `building-modal-desc-${config.id || 'default'}`;
@@ -34,12 +40,6 @@ export default function BuildingModal({ config, onClose, onEnter }) {
     background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 50%, #0ea5e9 100%)',
     boxShadow: '0 18px 40px rgba(37,99,235,0.55)'
   };
-
-  useEffect(() => {
-    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [onClose]);
 
   const modal = (
     <Motion.div

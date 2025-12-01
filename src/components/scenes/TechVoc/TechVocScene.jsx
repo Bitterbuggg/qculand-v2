@@ -31,11 +31,11 @@ function Room() {
   );
 }
 
-function Computer({ position, onInteractInRange }) {
+function Computer({ position }) {
   const meshRef = useRef();
-  const [hovered, setHover] = useState(false);
+  const [hovered] = useState(false);
 
-  useFrame((state) => {
+  useFrame(() => {
     // Simple bobbing animation for a marker above the computer
     if (meshRef.current) {
       // meshRef.current.rotation.y += 0.01;
@@ -93,7 +93,6 @@ function Computer({ position, onInteractInRange }) {
 
 function GameTrigger({ playerControls, onToggleGame, computerPos }) {
   const [isInRange, setIsInRange] = useState(false);
-  const vec = new Vector3();
 
   useFrame(() => {
     if (playerControls.current && playerControls.current.target) {
