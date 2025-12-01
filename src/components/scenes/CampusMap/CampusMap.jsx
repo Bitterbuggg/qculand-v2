@@ -90,9 +90,17 @@ export default function CampusMap({ onEnterBuilding }) {
             transition={{ duration: 0.2 }}
             className="absolute bottom-10 left-1/2 transform -translate-x-1/2 pointer-events-none z-40"
           >
-            <div className="bg-black/70 backdrop-blur-sm text-white px-6 py-3 rounded-full shadow-lg border border-white/20">
-              <h3 className="text-lg font-bold flex items-center gap-2">
-                <span>{buildingConfigs[hoveredBuilding].icon}</span>
+            <div 
+              style={{ 
+                backgroundColor: '#ffffff',
+                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)',
+                padding: '16px 40px',
+                borderRadius: '45px',
+                border: '1px solid #e2e8f0'
+              }}
+            >
+              <h3 style={{ fontSize: '18px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '12px', color: '#0f172a', margin: 0 }}>
+                <span style={{ fontSize: '24px' }}>{buildingConfigs[hoveredBuilding].icon}</span>
                 {buildingConfigs[hoveredBuilding].name}
               </h3>
             </div>
