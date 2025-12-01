@@ -1,15 +1,18 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, forwardRef, useImperativeHandle } from 'react';
 import { useGLTF, useAnimations } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
 const ASSET_BASE = import.meta.env.BASE_URL || '/';
 
-export default function Character({ targetPosition, controlsRef, scale = 0.003 }) {
+const Character = forwardRef(({ targetPosition, controlsRef, scale = 0.003 }, ref) => {
   const group = useRef();
   const { scene, animations } = useGLTF(`${ASSET_BASE}models/qcu_student_4.glb`);
   const { actions, names } = useAnimations(animations, group);
   const [currentAction, setCurrentAction] = useState('Idle');
+
+  // Expose the group ref to parent components
+  useImperativeHandle(ref, () => group.current, []);
 
   useEffect(() => {
     // Debug: Log animation names to finding the correct ones
@@ -75,7 +78,11 @@ export default function Character({ targetPosition, controlsRef, scale = 0.003 }
   });
 
   return <primitive ref={group} object={scene} scale={scale} />;
-}
+});
+
+Character.displayName = 'Character';
+
+export default Character;
 
 // Preload character model to avoid hitching when it first appears.
 useGLTF.preload(`${ASSET_BASE}models/qcu_student_4.glb`);
