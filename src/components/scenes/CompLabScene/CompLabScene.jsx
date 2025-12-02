@@ -3,12 +3,12 @@ import { Canvas } from '@react-three/fiber';
 import { AnimatePresence } from 'framer-motion';
 import { OrbitControls } from '@react-three/drei';
 import { MOUSE } from 'three';
-import TechVocEnvironment from './TechVocEnvironment';
-import TechVocPlayer from './TechVocPlayer';
-import TechVocUI from './TechVocUI';
-import TechVocPlayerUI from './TechVocPlayerUI';
+import CompLabEnvironment from './CompLabEnvironment';
+import CompLabPlayer from './CompLabPlayer';
+import CompLabUI from './CompLabUI';
+import CompLabPlayerUI from './CompLabPlayerUI';
 
-export default function TechVocScene({ onExit }) {
+export default function CompLabScene({ onExit }) {
   const [currentScenario, setCurrentScenario] = useState(null);
   const [playerTarget, setPlayerTarget] = useState({ x: 0, y: 0, z: 3 });
   const [showExitPrompt, setShowExitPrompt] = useState(false);
@@ -63,11 +63,11 @@ export default function TechVocScene({ onExit }) {
             }}
           />
 
-          <TechVocEnvironment 
+          <CompLabEnvironment 
             onPCClick={handlePCClick}
             onFloorClick={handleFloorClick}
           />
-          <TechVocPlayer 
+          <CompLabPlayer 
             targetPosition={playerTarget}
             controlsRef={controlsRef}
           />
@@ -75,7 +75,7 @@ export default function TechVocScene({ onExit }) {
       </div>
 
       <AnimatePresence>
-        <TechVocUI
+        <CompLabUI
           currentScenario={currentScenario}
           onScenarioComplete={handleScenarioComplete}
           showExitPrompt={showExitPrompt}
@@ -85,7 +85,7 @@ export default function TechVocScene({ onExit }) {
         />
       </AnimatePresence>
 
-      <TechVocPlayerUI />
+      <CompLabPlayerUI />
     </>
   );
 }

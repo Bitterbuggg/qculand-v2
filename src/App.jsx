@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import CampusMap from './components/scenes/CampusMap/CampusMap';
-import TechVocScene from './components/scenes/TechVocScene/TechVocScene';
+import CompLabScene from './components/scenes/CompLabScene/CompLabScene';
 import './styles/index.css';
 
 export default function App() {
@@ -8,8 +8,8 @@ export default function App() {
 
   const handleEnterBuilding = (buildingId) => {
     console.log(`Entering ${buildingId}`);
-    if (buildingId === 'techvoc') {
-      setCurrentScene('techvoc');
+    if (buildingId === 'computer-lab') {
+      setCurrentScene('computer-lab');
     } else {
       console.log(`${buildingId} scene not implemented yet`);
     }
@@ -24,8 +24,9 @@ export default function App() {
       {currentScene === 'campus' && (
         <CampusMap onEnterBuilding={handleEnterBuilding} />
       )}
-      {currentScene === 'techvoc' && (
-        <TechVocScene onExit={handleExitBuilding} />
+
+      {currentScene === 'computer-lab' && (
+        <CompLabScene onExit={handleExitBuilding} />
       )}
     </div>
   );

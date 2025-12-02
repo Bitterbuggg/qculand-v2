@@ -1,4 +1,4 @@
-// TechVoc-specific phishing quiz scenarios
+// Computer Lab-specific phishing quiz scenarios
 export const scenarios = {
   'phishing-email-1': {
     title: 'Suspicious Email Detected',

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion as Motion } from 'framer-motion';
 import { scenarios } from './scenarios';
 
-export default function TechVocUI({ 
+export default function CompLabUI({ 
   currentScenario, 
   onScenarioComplete,
   showExitPrompt,
@@ -84,7 +84,7 @@ export default function TechVocUI({
             }}
           >
             <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px', color: '#1a202c' }}>
-              Exit TechVoc Building?
+              Exit Computer Lab?
             </h2>
             <p style={{ fontSize: '16px', color: '#4a5568', marginBottom: '24px' }}>
               Are you sure you want to leave? Your progress will be saved.

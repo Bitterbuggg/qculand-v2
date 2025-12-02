@@ -4,11 +4,11 @@ import * as THREE from 'three';
 
 const ASSET_BASE = import.meta.env.BASE_URL || '/';
 
-export default function TechVocEnvironment({ onPCClick, onFloorClick }) {
+export default function CompLabEnvironment({ onPCClick, onFloorClick }) {
   const groupRef = useRef();
   const [hoveredPC, setHoveredPC] = useState(null);
 
-  // PC positions inside TechVoc building (adjust based on your model)
+  // PC positions inside Computer Lab building (adjust based on your model)
   const pcPositions = [
     { id: 'pc1', position: [-2, 0.8, -1], scenario: 'phishing-email-1' },
     { id: 'pc2', position: [0, 0.8, -1], scenario: 'phishing-email-2' },

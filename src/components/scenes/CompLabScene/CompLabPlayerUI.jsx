@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion as Motion } from 'framer-motion';
 
-export default function TechVocPlayerUI() {
+export default function CompLabPlayerUI() {
   return (
     <>
       {/* Movement Instructions */}

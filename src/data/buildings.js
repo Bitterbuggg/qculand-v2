@@ -1,10 +1,5 @@
 export const buildingConfigs = {
-  techvoc: {
-    name: "TechVoc Building",
-    icon: "🛠️",
-    description: "Technical and vocational training center with workshops and labs.",
-    canEnter: true
-  },
+
   "yellow-building": {
     name: "Yellow Building",
     icon: "📚",
@@ -26,7 +21,7 @@ export const buildingConfigs = {
   "computer-lab": {
     name: "Computer Lab",
     icon: "💻",
-    description: "Computer science labs with modern equipment and study spaces.",
+    description: "Computer science labs with modern equipment and study spaces for phishing quiz.",
     canEnter: true
   },
   "cube010-building": {

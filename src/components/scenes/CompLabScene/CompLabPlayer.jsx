@@ -5,7 +5,7 @@ import * as THREE from 'three';
 
 const ASSET_BASE = import.meta.env.BASE_URL || '/';
 
-export default function TechVocPlayer({ targetPosition, controlsRef }) {
+export default function CompLabPlayer({ targetPosition, controlsRef }) {
   const group = useRef();
   const { scene, animations } = useGLTF(`${ASSET_BASE}models/qcu_student_4.glb`);
   const { actions, names } = useAnimations(animations, group);
