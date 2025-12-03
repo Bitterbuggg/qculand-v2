@@ -145,11 +145,8 @@ export default function DormScene({ onExit }) {
       <div className="w-full h-full fixed top-0 left-0">
         <Canvas
           shadows
-          camera={{ position: [0, 2, 5], fov: 60 }}
-          dpr={[1, 1.5]}
-          gl={{ powerPreference: 'high-performance' }}
+          camera={{ fov: 50 }}
         >
-          <color attach="background" args={['#202020']} />
           
           {/* Using DormCamera to control camera */}
           <DormCamera 
@@ -213,7 +210,7 @@ export default function DormScene({ onExit }) {
           position: "absolute",
           top: "1rem", // top-4
           left: "1rem", // left-4
-          zIndex: 50,
+          zIndex: 60,
         }}
       >
         <button
