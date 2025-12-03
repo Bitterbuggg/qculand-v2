@@ -30,7 +30,7 @@ export const buildingConfigs = {
     canEnter: true
   },
   "cube010-building": {
-    name: "Main Hall",
+    name: "Academic Building",
     icon: "🏢",
     description: "Large multipurpose hall for events, lectures, and gatherings.",
     canEnter: true

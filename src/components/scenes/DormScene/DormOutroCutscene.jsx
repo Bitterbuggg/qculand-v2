@@ -19,9 +19,9 @@ export default function DormOutroCutscene({
 
   const steps = [
     {
-      dialog: { speaker: "Juan", text: "I did it! Locked down every security risk!" },
+      dialog: { speaker: "Ernesto", text: "I did it! Locked down every security risk!" },
       anim() { playAnim(studentRef, "win"); },
-      camera: "juan",
+      camera: "ernesto",
       duration: 1800,
     },
     {
@@ -31,9 +31,9 @@ export default function DormOutroCutscene({
       duration: 1800,
     },
     {
-      dialog: { speaker: "Juan", text: "Simple. I followed cybersecurity best practices!" },
+      dialog: { speaker: "Ernesto", text: "Simple. I followed cybersecurity best practices!" },
       anim() { playAnim(studentRef, "typing"); },
-      camera: "juan",
+      camera: "ernesto",
       duration: 1800,
     },
     {
@@ -43,18 +43,18 @@ export default function DormOutroCutscene({
       duration: 1500,
     },
     {
-      dialog: { speaker: "Juan", text: "I’ll be ready. QCU accounts stay secure!" },
+      dialog: { speaker: "Ernesto", text: "I’ll be ready. QCU accounts stay secure!" },
       anim() {
         if (bossRef.current) bossRef.current.visible = false;
         playAnim(studentRef, "Idle");
       },
-      camera: "juan",
+      camera: "ernesto",
       duration: 1400,
     },
     {
       dialog: { speaker: "", text: "" },
       anim() {},
-      camera: "juan",
+      camera: "ernesto",
       duration: 600,
     },
   ];

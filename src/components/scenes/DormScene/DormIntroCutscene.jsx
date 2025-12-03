@@ -19,13 +19,13 @@ export default function DormIntroCutscene({
 
   const steps = [
     {
-      dialog: { speaker: "Juan", text: "Alright, time to register at QCU and set up my account..." },
+      dialog: { speaker: "Ernesto", text: "Alright, time to register at QCU and set up my account..." },
       anim() { playAnim(studentRef, "Idle"); },
-      camera: "juan",
+      camera: "ernesto",
       duration: 1500,
     },
     {
-      dialog: { speaker: "Lockdown", text: "Welcome to QCU, Juan. But do you really know how to secure your new account?" },
+      dialog: { speaker: "Lockdown", text: "Welcome to QCU, Ernesto. But do you really know how to secure your new account?" },
       anim() { playAnim(bossRef, "Idle.1"); },
       camera: "lockdown",
       duration: 2000,
@@ -37,9 +37,9 @@ export default function DormIntroCutscene({
       duration: 2000,
     },
     {
-      dialog: { speaker: "Juan", text: "I need to make sure everything is locked down before moving forward..." },
+      dialog: { speaker: "Ernesto", text: "I need to make sure everything is locked down before moving forward..." },
       anim() { playAnim(studentRef, "typing"); },
-      camera: "juan",
+      camera: "ernesto",
       duration: 1800,
     },
     {
@@ -49,9 +49,9 @@ export default function DormIntroCutscene({
       duration: 2000,
     },
     {
-      dialog: { speaker: "Juan", text: "No way! I’ve got to stop you before you take control!" },
+      dialog: { speaker: "Ernesto", text: "No way! I’ve got to stop you before you take control!" },
       anim() { playAnim(studentRef, "win"); },
-      camera: "juan",
+      camera: "ernesto",
       duration: 1800,
     },
     {
@@ -61,15 +61,15 @@ export default function DormIntroCutscene({
       duration: 2000,
     },
     {
-      dialog: { speaker: "Juan", text: "Not if I set up a secure account right now!" },
+      dialog: { speaker: "Ernesto", text: "Not if I set up a secure account right now!" },
       anim() { playAnim(studentRef, "win"); },
-      camera: "juan",
+      camera: "ernesto",
       duration: 1800,
     },
     {
       dialog: { speaker: "", text: "" },
       anim() {},
-      camera: "juan",
+      camera: "ernesto",
       duration: 1000,
     },
   ];

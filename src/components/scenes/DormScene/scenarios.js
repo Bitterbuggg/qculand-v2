@@ -5,7 +5,7 @@ export const dormScenarios = [
     choices: [
       { text: "Mango123", correct: false },
       { text: "QcuBee!2025#Secure", correct: true },
-      { text: "juanpassword", correct: false },
+      { text: "ernestopassword", correct: false },
     ],
     successAnimation: "win",
     successMessage: "Nice! A strong password keeps your account safe, even on a shared terminal.",

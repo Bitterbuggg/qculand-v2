@@ -24,7 +24,7 @@ export default function DormScene({ onExit }) {
   const [phase, setPhase] = useState("intro"); // intro → quiz → outro → done
   const [index, setIndex] = useState(0);
 
-  const [cameraTarget, setCameraTarget] = useState("juan");
+  const [cameraTarget, setCameraTarget] = useState("ernesto");
 
   const studentRef = useRef();
   const bossRef = useRef();
@@ -208,10 +208,35 @@ export default function DormScene({ onExit }) {
       {/* === UI OVERLAYS === */}
 
       {/* Exit Button */}
-      <div className="absolute top-4 left-4 z-50">
+      <div
+        style={{
+          position: "absolute",
+          top: "1rem", // top-4
+          left: "1rem", // left-4
+          zIndex: 50,
+        }}
+      >
         <button
           onClick={() => setShowExitPrompt(true)}
-          className="bg-red-500 text-white px-4 py-2 rounded-lg font-bold hover:bg-red-600 transition shadow-lg"
+          style={{
+            backgroundColor: "#ef4444", // bg-red-500
+            color: "white",
+            padding: "0.5rem 1rem", // px-4 py-2
+            borderRadius: "0.5rem", // rounded-lg
+            fontWeight: "bold",
+            transition: "background-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out", // transition shadow
+            boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)", // shadow-lg
+            border: "none",
+            cursor: "pointer",
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.backgroundColor = "#dc2626"; // hover:bg-red-600
+            e.currentTarget.style.boxShadow = "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)"; // shadow-xl
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.backgroundColor = "#ef4444";
+            e.currentTarget.style.boxShadow = "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)";
+          }}
         >
           ← Exit Building
         </button>
@@ -241,7 +266,7 @@ export default function DormScene({ onExit }) {
               style={{
                 backgroundColor: "rgba(31, 41, 55, 0.9)", // bg-gray-800/90
                 backdropFilter: "blur(12px)", // backdrop-blur-md
-                border: `2px solid ${dialogue.speaker === "Juan" ? "#3b82f6" : (dialogue.speaker === "Lockdown" ? "#ef4444" : "#c9a3ff")}`,
+                border: `2px solid ${dialogue.speaker === "Ernesto" ? "#3b82f6" : (dialogue.speaker === "Lockdown" ? "#ef4444" : "#c9a3ff")}`,
                 padding: "24px",
                 borderRadius: "16px",
                 boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)", // shadow-xl
@@ -255,13 +280,13 @@ export default function DormScene({ onExit }) {
                   style={{
                     fontWeight: "bold",
                     fontSize: "1.25rem",
-                    color: dialogue.speaker === "Juan" ? "#3b82f6" : (dialogue.speaker === "Lockdown" ? "#ef4444" : "#c9a3ff"),
+                    color: dialogue.speaker === "Ernesto" ? "#3b82f6" : (dialogue.speaker === "Lockdown" ? "#ef4444" : "#c9a3ff"),
                     display: "flex",
                     alignItems: "center",
                     gap: "8px",
                   }}
                 >
-                  {dialogue.speaker === "Juan" ? "🧑‍🎓" : "🤖"} {dialogue.speaker}
+                  {dialogue.speaker === "Ernesto" ? "🧑‍🎓" : "🤖"} {dialogue.speaker}
                 </div>
               )}
               <div
@@ -365,20 +390,83 @@ export default function DormScene({ onExit }) {
 
       {/* Exit Confirmation */}
       {showExitPrompt && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70">
-          <div className="bg-white p-8 rounded-xl shadow-2xl text-center max-w-sm">
-            <h2 className="text-2xl font-bold mb-4 text-slate-800">Exit Building?</h2>
-            <p className="text-slate-600 mb-6">Are you sure you want to leave? Your progress might be lost.</p>
-            <div className="flex justify-center gap-4">
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 100,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "rgba(0, 0, 0, 0.7)", // bg-black/70
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: "white",
+              padding: "32px", // p-8
+              borderRadius: "16px", // rounded-xl
+              boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)", // shadow-2xl
+              textAlign: "center",
+              maxWidth: "24rem", // max-w-sm
+            }}
+          >
+            <h2
+              style={{
+                fontSize: "1.5rem", // text-2xl
+                fontWeight: "bold",
+                marginBottom: "1rem", // mb-4
+                color: "#1e293b", // text-slate-800
+              }}
+            >
+              Exit Building?
+            </h2>
+            <p
+              style={{
+                color: "#475569", // text-slate-600
+                marginBottom: "1.5rem", // mb-6
+              }}
+            >
+              Are you sure you want to leave? Your progress might be lost.
+            </p>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "1rem", // gap-4
+              }}
+            >
               <button
                 onClick={onExit}
-                className="bg-red-500 text-white px-6 py-2 rounded-lg font-bold hover:bg-red-600"
+                style={{
+                  backgroundColor: "#ef4444", // bg-red-500
+                  color: "white",
+                  padding: "0.625rem 1.5rem", // px-6 py-2.5
+                  borderRadius: "0.5rem", // rounded-lg
+                  fontWeight: "bold",
+                  border: "none",
+                  cursor: "pointer",
+                  transition: "background-color 0.15s ease-in-out",
+                }}
+                onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#dc2626"} // hover:bg-red-600
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#ef4444"}
               >
                 Yes, Exit
               </button>
               <button
                 onClick={() => setShowExitPrompt(false)}
-                className="bg-slate-200 text-slate-800 px-6 py-2 rounded-lg font-bold hover:bg-slate-300"
+                style={{
+                  backgroundColor: "#e2e8f0", // bg-slate-200
+                  color: "#1e293b", // text-slate-800
+                  padding: "0.625rem 1.5rem", // px-6 py-2.5
+                  borderRadius: "0.5rem", // rounded-lg
+                  fontWeight: "bold",
+                  border: "none",
+                  cursor: "pointer",
+                  transition: "background-color 0.15s ease-in-out",
+                }}
+                onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#cbd5e1"} // hover:bg-slate-300
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#e2e8f0"}
               >
                 Cancel
               </button>
