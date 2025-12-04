@@ -33,10 +33,13 @@ export default function FirewallGame({ onScoreUpdate, onHealthUpdate, onGameOver
     
     // Random speed variation
     const speed = 3 + Math.random() * 2;
+    
+    // Malware spawns higher to be prioritized by raycaster (top-down view)
+    const yPos = type === 'malware' ? 1.5 : 0;
 
     const newPacket = {
       id: nextId.current++,
-      position: [x, 0, z],
+      position: [x, yPos, z],
       type,
       speed
     };
