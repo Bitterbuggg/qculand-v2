@@ -7,7 +7,7 @@ const ASSET_BASE = import.meta.env.BASE_URL || '/';
 
 export default function CompLabPlayer({ targetPosition, controlsRef }) {
   const group = useRef();
-  const { scene, animations } = useGLTF(`${ASSET_BASE}models/qcu_student_4.glb`);
+  const { scene, animations } = useGLTF(`${ASSET_BASE}models/qcu_student_1.glb`);
   const { actions, names } = useAnimations(animations, group);
   const [currentAction, setCurrentAction] = useState('Idle');
 
@@ -19,13 +19,12 @@ export default function CompLabPlayer({ targetPosition, controlsRef }) {
   }, []);
 
   useEffect(() => {
-    let animName = currentAction;
-    const action = actions[animName] || actions[names[0]];
+    const action = actions[currentAction];
     if (action) {
       action.reset().fadeIn(0.2).play();
       return () => action.fadeOut(0.2);
     }
-  }, [currentAction, actions, names]);
+  }, [currentAction, actions]);
 
   useFrame((state, delta) => {
     if (!group.current) return;
@@ -53,12 +52,14 @@ export default function CompLabPlayer({ targetPosition, controlsRef }) {
         const lookTarget = new THREE.Vector3(target.x, playerPos.y, target.z);
         group.current.lookAt(lookTarget);
 
-        if (currentAction !== 'Run' && currentAction !== 'Walk') {
-          setCurrentAction(names.find(n => /run/i.test(n)) || names.find(n => /walk/i.test(n)) || names[0]); 
+        if (currentAction !== 'walking') {
+          // Prioritize 'walking' or 'run'
+          const moveAnim = names.find(n => /walk/i.test(n)) || names.find(n => /run/i.test(n)) || names[0];
+          setCurrentAction(moveAnim); 
         }
       } else {
         if (currentAction !== 'Idle') {
-          setCurrentAction(names.find(n => /idle/i.test(n)) || names[0]);
+           setCurrentAction('Idle');
         }
       }
     }
@@ -79,4 +80,4 @@ export default function CompLabPlayer({ targetPosition, controlsRef }) {
   return <primitive ref={group} object={scene} scale={0.03} />;
 }
 
-useGLTF.preload(`${ASSET_BASE}models/qcu_student_4.glb`);
+useGLTF.preload(`${ASSET_BASE}models/qcu_student_1.glb`);

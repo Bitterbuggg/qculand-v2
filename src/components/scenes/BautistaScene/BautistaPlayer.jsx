@@ -5,38 +5,20 @@ import * as THREE from 'three';
 
 const ASSET_BASE = import.meta.env.BASE_URL || '/';
 
-export default function Character({ targetPosition, controlsRef }) {
+export default function BautistaPlayer({ targetPosition, controlsRef }) {
   const group = useRef();
+  // Reuse the student model (updated to student 1)
   const { scene, animations } = useGLTF(`${ASSET_BASE}models/qcu_student_1.glb`);
   const { actions, names } = useAnimations(animations, group);
   const [currentAction, setCurrentAction] = useState('Idle');
-  const armBonesRef = useRef([]);
 
-  // Find and store arm bones on mount
   useEffect(() => {
-    if (scene) {
-      const armBones = [];
-      scene.traverse((child) => {
-        if (child.isBone) {
-          const boneName = child.name.toLowerCase();
-          // Collect arm, hand, and shoulder bones
-          if (boneName.includes('arm') || 
-              boneName.includes('hand') || 
-              boneName.includes('shoulder') ||
-              boneName.includes('wrist') ||
-              boneName.includes('finger')) {
-            armBones.push(child);
-          }
-        }
-      });
-      armBonesRef.current = armBones;
-      
-      // Store initial arm rotations
-      armBones.forEach(bone => {
-        bone.userData.initialRotation = bone.rotation.clone();
-      });
+    // Set initial player position
+    if (group.current) {
+      // Start near the center or entrance
+      group.current.position.set(0, 0, 2); 
     }
-  }, [scene]);
+  }, []);
 
   useEffect(() => {
     const action = actions[currentAction];
@@ -73,9 +55,9 @@ export default function Character({ targetPosition, controlsRef }) {
         group.current.lookAt(lookTarget);
 
         if (currentAction !== 'walking') {
-           // Prioritize 'walking' or 'run'
-           const moveAnim = names.find(n => /walk/i.test(n)) || names.find(n => /run/i.test(n)) || names[0];
-           setCurrentAction(moveAnim); 
+          // Prioritize 'walking' or 'run'
+          const moveAnim = names.find(n => /walk/i.test(n)) || names.find(n => /run/i.test(n)) || names[0];
+          setCurrentAction(moveAnim); 
         }
       } else {
         if (currentAction !== 'Idle') {
@@ -84,27 +66,20 @@ export default function Character({ targetPosition, controlsRef }) {
       }
     }
 
-    // Freeze arm movement - reset arms to initial rotation
-    armBonesRef.current.forEach(bone => {
-      if (bone.userData.initialRotation) {
-        bone.rotation.copy(bone.userData.initialRotation);
-      }
-    });
-
     // Update Orbital Camera to follow character
     if (controlsRef && controlsRef.current) {
-        const displacement = playerPos.clone().sub(startPos);
+      const displacement = playerPos.clone().sub(startPos);
 
-        // Move camera by the same displacement to maintain relative position
-        state.camera.position.add(displacement);
+      // Move camera by the same displacement to maintain relative position
+      state.camera.position.add(displacement);
 
-        // Update target to lock on character
-        controlsRef.current.target.copy(playerPos);
-        controlsRef.current.update();
+      // Update target to lock on character
+      controlsRef.current.target.copy(playerPos);
+      controlsRef.current.update();
     }
   });
 
-  return <primitive ref={group} object={scene} scale={0.03} />;
+  return <primitive ref={group} object={scene} scale={1} />;
 }
 
 useGLTF.preload(`${ASSET_BASE}models/qcu_student_1.glb`);
