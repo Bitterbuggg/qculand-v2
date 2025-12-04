@@ -9,20 +9,11 @@ const ASSET_BASE = import.meta.env.BASE_URL || '/';
 const DormStudent = forwardRef(({ animation = "walking", position = [0, -0.35, 1], scale = 0.035 }, ref) => {
   const { scene, animations } = useGLTF(`${ASSET_BASE}models/qcu_student_1.glb`);
 
-
-
-  const { play, update, actions } = useAnimationState(animations, scene);
-
-  // Attach actions to the scene so they can be accessed via ref if needed
-  useEffect(() => {
-    if (scene) {
-      scene.actions = actions;
-    }
-  }, [scene, actions]);
+  const { play, update } = useAnimationState(animations, scene);
 
   useEffect(() => {
     if (animation) play(animation);
-  }, [animation, scene]);
+  }, [animation]);
 
   useFrame((_, delta) => update(delta));
 
