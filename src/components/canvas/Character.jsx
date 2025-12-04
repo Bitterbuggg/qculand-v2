@@ -59,7 +59,7 @@ export default function Character({ targetPosition, controlsRef }) {
       const stopThreshold = 0.1;
 
       if (distance > stopThreshold) {
-        const speed = 3;
+        const speed = 1;
         const direction = target.clone().sub(playerPos).normalize();
         
         const moveStep = speed * delta;
@@ -104,7 +104,7 @@ export default function Character({ targetPosition, controlsRef }) {
     }
   });
 
-  return <primitive ref={group} object={scene} scale={0.03} />;
+  return <primitive ref={group} object={scene} scale={0.003} />;
 }
 
 useGLTF.preload(`${ASSET_BASE}models/qcu_student_1.glb`);

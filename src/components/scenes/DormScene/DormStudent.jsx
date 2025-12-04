@@ -9,22 +9,11 @@ const ASSET_BASE = import.meta.env.BASE_URL || '/';
 const DormStudent = forwardRef(({ animation = "walking", position = [0, -0.35, 1], scale = 0.035 }, ref) => {
   const { scene, animations } = useGLTF(`${ASSET_BASE}models/qcu_student_1.glb`);
 
-  // Lighten up the student model materials
-  useEffect(() => {
-    scene.traverse((child) => {
-      if (child.isMesh) {
-        // Add a slight emissive glow to brighten the character without altering scene lights
-        child.material.emissive = new THREE.Color("#555555");
-        child.material.emissiveIntensity = 0.4;
-        // Ensure transparency is handled if needed, though usually not for characters
-        child.material.needsUpdate = true;
-      }
-    });
-  }, [scene]);
+
 
   const { play, update, actions } = useAnimationState(animations, scene);
 
-  // Attach actions to the scene so they can be accessed via ref
+  // Attach actions to the scene so they can be accessed via ref if needed
   useEffect(() => {
     if (scene) {
       scene.actions = actions;
