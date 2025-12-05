@@ -7,16 +7,23 @@ import { MOUSE } from "three";
 import CampusModels from "../../canvas/CampusModels";
 import Character from "../../canvas/Character";
 import BuildingModal from "../../ui/BuildingModal";
+import RoomSelectionModal from "../TriangleScene/RoomSelectionModal";
 import { buildingConfigs } from "../../../data/buildings";
+import { roomConfigs } from "../../../data/rooms";
 
 export default function CampusMap({ onEnterBuilding }) {
   const [showBuildingModal, setShowBuildingModal] = useState(null);
+  const [showRoomSelection, setShowRoomSelection] = useState(false);
   const [playerTarget, setPlayerTarget] = useState({ x: 0, y: 0, z: 5 });
-  const [hoveredBuilding, setHoveredBuilding] = useState(null); // State for hovered building
+  const [hoveredBuilding, setHoveredBuilding] = useState(null); 
   const controlsRef = useRef();
 
   const handleBuildingClick = (buildingId) => {
-    setShowBuildingModal(buildingId);
+    if (buildingId === 'triangle-complex') {
+      setShowRoomSelection(true);
+    } else {
+      setShowBuildingModal(buildingId);
+    }
   };
 
   const handleFloorClick = (point) => {
@@ -30,8 +37,16 @@ export default function CampusMap({ onEnterBuilding }) {
     setShowBuildingModal(null);
   };
 
+  const handleEnterRoom = (roomId) => {
+    if (onEnterBuilding) {
+      onEnterBuilding(roomId); // Helper to treat rooms as buildings for state switch
+    }
+    setShowRoomSelection(false);
+  };
+
   const handleCloseModal = () => {
     setShowBuildingModal(null);
+    setShowRoomSelection(false);
   };
 
   // Hover handlers
@@ -137,6 +152,12 @@ export default function CampusMap({ onEnterBuilding }) {
             onClose={handleCloseModal}
             onEnter={handleEnterBuilding}
           />
+        )}
+        {showRoomSelection && (
+           <RoomSelectionModal 
+             onClose={handleCloseModal}
+             onSelectRoom={handleEnterRoom}
+           />
         )}
       </AnimatePresence>
     </>

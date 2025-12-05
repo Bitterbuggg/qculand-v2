@@ -19,7 +19,8 @@ export default function CampusModels({ onBuildingClick, onFloorClick, onBuilding
     }
     
     if (clickedObject.includes('Triangle')) {
-       alert("You found the QCU Triangle! A historic landmark.");
+       // Treat Triangle as a building for the UI modal
+       if (onBuildingClick) onBuildingClick('triangle-complex');
        return;
     }
 

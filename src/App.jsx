@@ -6,10 +6,13 @@ import AcademicBuildingScene from './components/scenes/AcademicBuildingScene/Aca
 import BautistaScene from './components/scenes/BautistaScene/BautistaScene';
 import YellowBuildingScene from './components/scenes/YellowBuildingScene/YellowBuildingScene';
 import AdminBuildingScene from './components/scenes/AdminBuildingScene/AdminBuildingScene';
+import RoomExplorerScene from './components/scenes/TriangleScene/RoomExplorerScene';
+import { roomConfigs } from './data/rooms';
 import './styles/index.css';
 
 export default function App() {
   const [currentScene, setCurrentScene] = useState('campus');
+  const [currentRoomId, setCurrentRoomId] = useState(null);
 
   const handleEnterBuilding = (buildingId) => {
     if (buildingId === 'computer-lab') {
@@ -24,6 +27,9 @@ export default function App() {
       setCurrentScene('yellow-building');
     } else if (buildingId === 'admin-building') {
       setCurrentScene('admin-building');
+    } else if (buildingId.startsWith('room-')) {
+      setCurrentRoomId(buildingId);
+      setCurrentScene('room-explorer');
     } else {
       console.log(`${buildingId} scene not implemented yet`);
     }
@@ -31,6 +37,7 @@ export default function App() {
 
   const handleExitBuilding = () => {
     setCurrentScene('campus');
+    setCurrentRoomId(null);
   };
 
   return (
@@ -61,6 +68,13 @@ export default function App() {
 
       {currentScene === 'admin-building' && (
         <AdminBuildingScene onExit={handleExitBuilding} />
+      )}
+
+      {currentScene === 'room-explorer' && currentRoomId && (
+        <RoomExplorerScene 
+          roomConfig={roomConfigs[currentRoomId]} 
+          onExit={handleExitBuilding} 
+        />
       )}
     </div>
   );
