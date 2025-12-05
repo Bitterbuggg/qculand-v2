@@ -8,18 +8,48 @@ export default function CampusModels({ onBuildingClick, onFloorClick, onBuilding
   // Load the base map (non-interactive terrain/paths)
   const baseMap = useGLTF(`${ASSET_BASE}models/qcu_base.glb`);
 
+  const handleBaseMapClick = (e) => {
+    e.stopPropagation();
+    const clickedObject = e.object.name;
+    
+    // Check for specific interactable objects inside the base map
+    if (clickedObject.includes('Bleachers')) {
+      // You can replace this with a proper modal or callback later
+      return;
+    }
+    
+    if (clickedObject.includes('Triangle')) {
+       alert("You found the QCU Triangle! A historic landmark.");
+       return;
+    }
+
+    if (onFloorClick) {
+      onFloorClick(e.point);
+    }
+  };
+
+  const handleBaseMapHover = (e) => {
+    const hoveredObject = e.object.name;
+    if (hoveredObject.includes('Bleachers') || hoveredObject.includes('Triangle')) {
+      document.body.style.cursor = 'pointer';
+    } else {
+      document.body.style.cursor = 'default';
+    }
+  };
+
+  const handleBaseMapHoverOut = () => {
+    document.body.style.cursor = 'default';
+  };
+
   return (
     <>
       {/* Base Map - Static environment */}
       <primitive 
         object={baseMap.scene} 
         position={[0, 0, 0]} 
-        onClick={(e) => {
-          e.stopPropagation();
-          if (onFloorClick) {
-            onFloorClick(e.point);
-          }
-        }}
+        onClick={handleBaseMapClick}
+        onPointerOver={handleBaseMapHover}
+        onPointerOut={handleBaseMapHoverOut}
       />
       
       {/* Interactive Buildings - Accurate positions from original map */}
