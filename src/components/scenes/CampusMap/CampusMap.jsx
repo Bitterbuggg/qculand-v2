@@ -80,6 +80,27 @@ export default function CampusMap({ onEnterBuilding }) {
         </Canvas>
       </div>
 
+      {/* Movement Instructions */}
+      <Motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="absolute bottom-24 left-1/2 transform -translate-x-1/2 z-30 pointer-events-none"
+        style={{
+          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          color: '#ffffff',
+          padding: '12px 24px',
+          borderRadius: '12px',
+          fontSize: '14px',
+          fontWeight: '500',
+          textAlign: 'center'
+        }}
+      >
+        <div>Click on the floor to move around</div>
+        <div style={{ fontSize: '12px', marginTop: '4px', opacity: 0.8 }}>
+          Click on a building to view details
+        </div>
+      </Motion.div>
+
       {/* Building Name Hover Overlay (Bottom Center) */}
       <AnimatePresence>
         {hoveredBuilding && buildingConfigs[hoveredBuilding] && (

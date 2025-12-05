@@ -3,12 +3,15 @@ import { motion as Motion } from 'framer-motion';
 import { scenarios } from './scenarios';
 
 export default function CompLabUI({ 
+  gameState,
+  score,
+  lives,
   currentScenario, 
-  onScenarioComplete,
-  showExitPrompt,
-  onConfirmExit,
-  onCancelExit,
-  onExitRequest
+  onAnswer,
+  onStart,
+  onRestart,
+  onExit,
+  onCloseModal
 }) {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [showResult, setShowResult] = useState(false);
@@ -16,8 +19,17 @@ export default function CompLabUI({
 
   const scenario = currentScenario ? scenarios[currentScenario] : null;
 
+  // Reset local state when scenario changes or closes
+  React.useEffect(() => {
+    if (!currentScenario) {
+      setSelectedAnswer(null);
+      setShowResult(false);
+      setIsCorrect(false);
+    }
+  }, [currentScenario]);
+
   const handleAnswerSelect = (answerId) => {
-    if (showResult) return; // Prevent changing answer after submission
+    if (showResult) return; 
     setSelectedAnswer(answerId);
   };
 
@@ -30,99 +42,200 @@ export default function CompLabUI({
   };
 
   const handleContinue = () => {
-    setSelectedAnswer(null);
-    setShowResult(false);
-    setIsCorrect(false);
-    onScenarioComplete();
+    // Notify parent of result
+    onAnswer(isCorrect);
+  };
+
+  // Styles matching FirewallUI
+  const overlayStyle = {
+    position: 'absolute',
+    inset: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 50,
+  };
+
+  const cardStyle = {
+    backgroundColor: 'white',
+    padding: '2rem',
+    borderRadius: '1rem',
+    maxWidth: '28rem',
+    textAlign: 'center',
+    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+    borderWidth: '4px',
+    borderStyle: 'solid',
+  };
+
+  const buttonBaseStyle = {
+    padding: '0.75rem 1.5rem',
+    borderRadius: '0.75rem',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    border: 'none',
+    transition: 'all 0.2s',
   };
 
   return (
     <>
-      {/* Exit Button */}
-      <Motion.button
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        className="absolute top-4 left-4 z-50"
-        onClick={onExitRequest}
-        style={{
-          backgroundColor: '#ef4444',
-          color: '#ffffff',
-          padding: '10px 20px',
-          borderRadius: '8px',
-          border: 'none',
-          fontWeight: 'bold',
-          cursor: 'pointer',
-          fontSize: '14px',
-          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)'
-        }}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        ← Exit Building
-      </Motion.button>
+      {/* HUD: Score & Lives (Only when playing) */}
+      {gameState === 'playing' && (
+        <>
+          <div style={{
+            position: 'absolute',
+            bottom: 0,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            padding: '1rem',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'flex-start',
+            pointerEvents: 'none',
+            zIndex: 10,
+            gap: '1.5rem',
+          }}>
+            {/* Score */}
+            <div style={{
+              backgroundColor: 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(4px)',
+              padding: '0.75rem 1rem',
+              borderRadius: '0.75rem',
+              boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+              border: '2px solid #F9BD4B', // Yellow/Orange theme
+            }}>
+              <div style={{ fontSize: '0.625rem', fontWeight: 'bold', color: '#6b7280', textTransform: 'uppercase' }}>Security Score</div>
+              <div style={{ fontSize: '1.25rem', fontWeight: '900', color: '#C87D0C' }}>{score}</div>
+            </div>
 
-      {/* Exit Confirmation Modal */}
-      {showExitPrompt && (
-        <Motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[9999] flex items-center justify-center"
-          style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)' }}
-        >
-          <Motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.9, opacity: 0 }}
+            {/* Lives */}
+            <div style={{
+              backgroundColor: 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(4px)',
+              padding: '0.75rem 1rem',
+              borderRadius: '0.75rem',
+              boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+              border: '2px solid #F9BD4B',
+            }}>
+               <div style={{ fontSize: '0.625rem', fontWeight: 'bold', color: '#6b7280', textTransform: 'uppercase', textAlign: 'right' }}>System Integrity</div>
+               <div style={{ display: 'flex', gap: '0.25rem', marginTop: '0.125rem', justifyContent: 'center' }}>
+                 {[...Array(3)].map((_, i) => (
+                   <span key={i} style={{ fontSize: '1.25rem', opacity: i < lives ? 1 : 0.3 }}>
+                     {i < lives ? '❤️' : '🖤'}
+                   </span>
+                 ))}
+               </div>
+            </div>
+          </div>
+
+          {/* Exit Button */}
+          <button 
+            onClick={onExit}
             style={{
-              backgroundColor: '#ffffff',
-              padding: '32px',
-              borderRadius: '16px',
-              maxWidth: '400px',
-              textAlign: 'center',
-              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)'
+              position: 'absolute',
+              top: '1rem',
+              right: '1rem',
+              backgroundColor: '#ef4444',
+              color: 'white',
+              border: 'none',
+              padding: '0.5rem 1rem',
+              borderRadius: '0.5rem',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: '0.875rem',
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+              zIndex: 10,
             }}
           >
-            <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px', color: '#1a202c' }}>
-              Exit Computer Lab?
-            </h2>
-            <p style={{ fontSize: '16px', color: '#4a5568', marginBottom: '24px' }}>
-              Are you sure you want to leave? Your progress will be saved.
+            Exit
+          </button>
+        </>
+      )}
+
+      {/* Start Screen */}
+      {gameState === 'start' && (
+        <div style={{
+          ...overlayStyle,
+          backgroundColor: 'rgba(254, 243, 199, 0.9)', // warm yellow tint
+          backdropFilter: 'blur(4px)',
+        }}>
+          <div style={{
+            ...cardStyle,
+            borderColor: '#F9BD4B',
+            backgroundColor: '#FFFFFF',
+          }}>
+            <div style={{ fontSize: '3.75rem', marginBottom: '1rem' }}>💻</div>
+            <h1 style={{ fontSize: '1.875rem', fontWeight: '900', color: '#1e293b', marginBottom: '0.5rem' }}>Computer Lab Challenge</h1>
+            <p style={{ color: '#475569', marginBottom: '1.5rem' }}>
+              Inspect the workstations. Identify <span style={{ color: '#dc2626', fontWeight: 'bold' }}>Phishing Attempts</span> and secure the lab.
+              <br/><br/>
+              <strong>Goal:</strong> Secure 3 workstations.<br/>
+              <strong>Lives:</strong> 3 Mistakes allowed.
             </p>
-            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
-              <button
-                onClick={onConfirmExit}
-                style={{
-                  backgroundColor: '#ef4444',
-                  color: '#ffffff',
-                  padding: '12px 24px',
-                  borderRadius: '8px',
-                  border: 'none',
-                  fontWeight: 'bold',
-                  cursor: 'pointer',
-                  fontSize: '14px'
-                }}
-              >
-                Yes, Exit
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+              <button onClick={onExit} style={{ ...buttonBaseStyle, backgroundColor: '#64748b', color: 'white' }}>
+                Exit
               </button>
-              <button
-                onClick={onCancelExit}
-                style={{
-                  backgroundColor: '#e2e8f0',
-                  color: '#1a202c',
-                  padding: '12px 24px',
-                  borderRadius: '8px',
-                  border: 'none',
-                  fontWeight: 'bold',
-                  cursor: 'pointer',
-                  fontSize: '14px'
-                }}
-              >
-                Cancel
+              <button onClick={onStart} style={{ ...buttonBaseStyle, backgroundColor: '#C87D0C', color: 'white' }}>
+                Start Inspection
               </button>
             </div>
-          </Motion.div>
-        </Motion.div>
+          </div>
+        </div>
+      )}
+
+      {/* Game Over Screen */}
+      {gameState === 'gameover' && (
+        <div style={{
+          ...overlayStyle,
+          backgroundColor: 'rgba(127, 29, 29, 0.8)',
+          backdropFilter: 'blur(4px)',
+        }}>
+          <div style={{
+            ...cardStyle,
+            borderColor: '#ef4444',
+          }}>
+            <div style={{ fontSize: '3.75rem', marginBottom: '1rem' }}>💀</div>
+            <h1 style={{ fontSize: '1.875rem', fontWeight: '900', color: '#1e293b', marginBottom: '0.5rem' }}>System Compromised!</h1>
+            <p style={{ color: '#475569', marginBottom: '1.5rem' }}>
+              You failed to identify the threats. The network is infected.
+            </p>
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+              <button onClick={onExit} style={{ ...buttonBaseStyle, backgroundColor: '#64748b', color: 'white' }}>
+                Exit
+              </button>
+              <button onClick={onRestart} style={{ ...buttonBaseStyle, backgroundColor: '#dc2626', color: 'white' }}>
+                Try Again
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Win Screen */}
+      {gameState === 'won' && (
+        <div style={{
+          ...overlayStyle,
+          backgroundColor: 'rgba(20, 83, 45, 0.8)',
+          backdropFilter: 'blur(4px)',
+        }}>
+          <div style={{
+            ...cardStyle,
+            borderColor: '#22c55e',
+          }}>
+            <div style={{ fontSize: '3.75rem', marginBottom: '1rem' }}>🏆</div>
+            <h1 style={{ fontSize: '1.875rem', fontWeight: '900', color: '#1e293b', marginBottom: '0.5rem' }}>Lab Secured!</h1>
+            <p style={{ color: '#475569', marginBottom: '1.5rem' }}>
+              All workstations are safe. Great job!
+              <br/>
+              <strong>Final Score: {score}</strong>
+            </p>
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+               <button onClick={onExit} style={{ ...buttonBaseStyle, backgroundColor: '#16a34a', color: 'white' }}>
+                Return to Campus
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Phishing Quiz Modal */}
@@ -140,7 +253,7 @@ export default function CompLabUI({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: 'rgba(200, 125, 12, 0.3)',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
             zIndex: 9998
           }}
         >
@@ -156,11 +269,30 @@ export default function CompLabUI({
               width: '90%',
               maxHeight: '85vh',
               overflowY: 'auto',
-              boxShadow: '0 25px 50px rgba(200, 125, 12, 0.4)',
-              border: '2px solid #F9BD4B',
+              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.4)',
+              border: '4px solid #F9BD4B',
               position: 'relative'
             }}
           >
+             {/* Close Button (X) */}
+             {!showResult && (
+                <button
+                  onClick={onCloseModal}
+                  style={{
+                    position: 'absolute',
+                    top: '16px',
+                    right: '16px',
+                    background: 'none',
+                    border: 'none',
+                    fontSize: '24px',
+                    cursor: 'pointer',
+                    color: '#6b7280'
+                  }}
+                >
+                  ✕
+                </button>
+             )}
+
             {!showResult ? (
               <>
                 <div style={{ marginBottom: '20px' }}>
@@ -172,11 +304,10 @@ export default function CompLabUI({
                   </p>
                 </div>
 
-                {/* Email Content Display */}
                 <div 
                   style={{
-                    backgroundColor: '#FFE0A4',
-                    border: '2px solid #F9BD4B',
+                    backgroundColor: '#fffbeb', // Light yellow
+                    border: '1px solid #F9BD4B',
                     borderRadius: '12px',
                     padding: '16px',
                     marginBottom: '20px'
@@ -188,7 +319,7 @@ export default function CompLabUI({
                   <div style={{ marginBottom: '10px', fontSize: '14px' }}>
                     <strong style={{ color: '#C87D0C' }}>Subject:</strong> {scenario.emailSubject}
                   </div>
-                  <div style={{ marginTop: '10px', color: '#000000', lineHeight: '1.5', fontSize: '14px' }}>
+                  <div style={{ marginTop: '10px', color: '#000000', lineHeight: '1.5', fontSize: '14px', whiteSpace: 'pre-wrap' }}>
                     {scenario.emailBody}
                   </div>
                 </div>
@@ -197,18 +328,17 @@ export default function CompLabUI({
                   {scenario.question}
                 </h3>
 
-                {/* Answer Options */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '20px' }}>
                   {scenario.answers.map((answer) => (
                     <button
                       key={answer.id}
                       onClick={() => handleAnswerSelect(answer.id)}
                       style={{
-                        backgroundColor: selectedAnswer === answer.id ? '#F9BD4B' : '#FFE0A4',
+                        backgroundColor: selectedAnswer === answer.id ? '#F9BD4B' : '#FFF',
                         color: selectedAnswer === answer.id ? '#FFFFFF' : '#000000',
                         padding: '12px 16px',
                         borderRadius: '10px',
-                        border: selectedAnswer === answer.id ? '2px solid #C87D0C' : '2px solid #F9BD4B',
+                        border: selectedAnswer === answer.id ? '2px solid #C87D0C' : '2px solid #e5e7eb',
                         textAlign: 'left',
                         cursor: 'pointer',
                         fontWeight: selectedAnswer === answer.id ? 'bold' : 'normal',
@@ -240,47 +370,37 @@ export default function CompLabUI({
                 </button>
               </>
             ) : (
-              <>
-                {/* Result Display */}
-                <div style={{ textAlign: 'center', padding: '20px 0' }}>
-                  <div 
-                    style={{
-                      fontSize: '48px',
-                      marginBottom: '16px'
-                    }}
-                  >
-                    {isCorrect ? '✅' : '❌'}
-                  </div>
-                  <h2 
-                    style={{ 
-                      fontSize: '24px', 
-                      fontWeight: 'bold', 
-                      color: isCorrect ? '#10b981' : '#ef4444',
-                      marginBottom: '12px'
-                    }}
-                  >
-                    {isCorrect ? 'Correct!' : 'Incorrect'}
-                  </h2>
-                  <p style={{ fontSize: '14px', color: '#C87D0C', marginBottom: '20px', lineHeight: '1.5' }}>
-                    {scenario.explanation}
-                  </p>
-                  <button
-                    onClick={handleContinue}
-                    style={{
-                      backgroundColor: '#C87D0C',
-                      color: '#ffffff',
-                      padding: '12px 32px',
-                      borderRadius: '10px',
-                      border: 'none',
-                      fontWeight: 'bold',
-                      cursor: 'pointer',
-                      fontSize: '15px'
-                    }}
-                  >
-                    Continue
-                  </button>
+              <div style={{ textAlign: 'center', padding: '20px 0' }}>
+                <div style={{ fontSize: '48px', marginBottom: '16px' }}>
+                  {isCorrect ? '✅' : '❌'}
                 </div>
-              </>
+                <h2 style={{ 
+                  fontSize: '24px', 
+                  fontWeight: 'bold', 
+                  color: isCorrect ? '#10b981' : '#ef4444',
+                  marginBottom: '12px'
+                }}>
+                  {isCorrect ? 'Correct!' : 'Incorrect'}
+                </h2>
+                <p style={{ fontSize: '14px', color: '#374151', marginBottom: '20px', lineHeight: '1.5' }}>
+                  {scenario.explanation}
+                </p>
+                <button
+                  onClick={handleContinue}
+                  style={{
+                    backgroundColor: '#C87D0C',
+                    color: '#ffffff',
+                    padding: '12px 32px',
+                    borderRadius: '10px',
+                    border: 'none',
+                    fontWeight: 'bold',
+                    cursor: 'pointer',
+                    fontSize: '15px'
+                  }}
+                >
+                  Continue
+                </button>
+              </div>
             )}
           </Motion.div>
         </Motion.div>

@@ -8,7 +8,7 @@ export default function CompLabPlayerUI() {
       <Motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-40"
+        className="absolute bottom-24 left-1/2 transform -translate-x-1/2 z-40"
         style={{
           backgroundColor: 'rgba(0, 0, 0, 0.7)',
           color: '#ffffff',

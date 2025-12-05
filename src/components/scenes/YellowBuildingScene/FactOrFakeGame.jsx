@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import LaneRunner from './LaneRunner';
 import Gate from './Gate';
@@ -18,7 +18,12 @@ const STATEMENTS = [
 
 export default function FactOrFakeGame({ onScoreUpdate, onLivesUpdate, onGameOver, onWin }) {
   const [gates, setGates] = useState([]);
-  const [lane, setLane] = useState(0); // 0 = Left (Real), 1 = Right (Fake)
+  const [lane, setLane] = useState(-1); // -1 = Left (Real), 1 = Right (Fake)
+  const laneRef = useRef(lane);
+  
+  useEffect(() => {
+    laneRef.current = lane;
+  }, [lane]);
   
   const nextId = useRef(0);
   const timer = useRef(0);
@@ -62,7 +67,7 @@ export default function FactOrFakeGame({ onScoreUpdate, onLivesUpdate, onGameOve
        
        // Collision Check at Z=0 (approx)
        if (g.z <= 0 && newZ > 0 && !g.processed) {
-         handleCollision(g, lane);
+         handleCollision(g, laneRef.current);
          return { ...g, z: newZ, processed: true };
        }
        return { ...g, z: newZ };
@@ -85,10 +90,10 @@ export default function FactOrFakeGame({ onScoreUpdate, onLivesUpdate, onGameOve
 
   const handleCollision = (gate, playerLane) => {
     // Logic:
-    // If statement is REAL (isReal=true), correct lane is LEFT (0).
+    // If statement is REAL (isReal=true), correct lane is LEFT (-1).
     // If statement is FAKE (isReal=false), correct lane is RIGHT (1).
     
-    const correctLane = gate.isReal ? 0 : 1;
+    const correctLane = gate.isReal ? -1 : 1;
     
     if (playerLane === correctLane) {
       // Correct!

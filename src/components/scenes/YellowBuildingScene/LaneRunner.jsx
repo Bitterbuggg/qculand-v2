@@ -10,9 +10,9 @@ export default function LaneRunner({ lane, setLane }) {
   const { actions } = useAnimations(animations, group);
   
   // Target X position based on lane (-1 for Left, 1 for Right)
-  // Lane 0 = Left (Real), Lane 1 = Right (Fake)
-  // Let's map: 0 -> -2, 1 -> 2
-  const targetX = lane === 0 ? -2 : 2;
+  // Lane -1 = Left (Real), Lane 1 = Right (Fake)
+  // Let's map: -1 -> -2, 1 -> 2
+  const targetX = lane * 2;
 
   useEffect(() => {
     // Try 'walking', then case-insensitive 'walk', then first available
@@ -34,9 +34,9 @@ export default function LaneRunner({ lane, setLane }) {
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.code === 'ArrowLeft') setLane(0);
+      if (e.code === 'ArrowLeft') setLane(-1);
       if (e.code === 'ArrowRight') setLane(1);
-      if (e.code === 'KeyA') setLane(0);
+      if (e.code === 'KeyA') setLane(-1);
       if (e.code === 'KeyD') setLane(1);
     };
     
@@ -45,7 +45,7 @@ export default function LaneRunner({ lane, setLane }) {
   }, [setLane]);
 
   return (
-    <group ref={group} position={[0, -0.5, 0]}>
+    <group ref={group} position={[targetX, -0.5, 0]}>
       <primitive 
         object={scene} 
         rotation={[0, Math.PI, 0]} 
