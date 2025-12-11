@@ -3,19 +3,93 @@ import React from 'react';
 export default function FactOrFakeUI({ gameState, score, lives, onStart, onExit, onRestart }) {
   if (gameState === 'start') {
     return (
-      <div style={styles.overlay}>
-        <div style={styles.card}>
-          <h1 style={styles.title}>Fact or Fake?</h1>
-          <p style={styles.text}>
-            Run through the correct lane!
-            <br />
-            <strong>LEFT Lane (Real):</strong> True facts or safe links.
-            <br />
-            <strong>RIGHT Lane (Fake):</strong> Scams, lies, or malware.
-          </p>
-          <p style={styles.instruction}>Use &larr; Left / Right &rarr; Arrows</p>
-          <button onClick={onStart} style={styles.button}>Start Running</button>
-          <button onClick={onExit} style={{...styles.button, backgroundColor: '#ef4444', marginTop: '10px'}}>Exit</button>
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(15, 23, 42, 0.95)',
+        backdropFilter: 'blur(4px)',
+        zIndex: 50,
+      }}>
+        <div style={{
+          backgroundColor: 'white',
+          padding: '2rem',
+          borderRadius: '1rem',
+          maxWidth: '36rem',
+          textAlign: 'left',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+          border: '4px solid #fbbf24',
+        }}>
+          <div style={{ textAlign: 'center', fontSize: '3rem', marginBottom: '0.5rem' }}>🕵️</div>
+          <h1 style={{ textAlign: 'center', fontSize: '2rem', fontWeight: '900', color: '#1e293b', marginBottom: '1rem' }}>Social Engineering</h1>
+          
+          <div style={{ marginBottom: '1.5rem', fontSize: '0.95rem', color: '#334155', lineHeight: '1.5' }}>
+            <p style={{ marginBottom: '0.5rem' }}>
+              <strong>What is Phishing?</strong>
+            </p>
+            <p>
+              Social engineering attacks, like Phishing, trick you into revealing sensitive info. They often masquerade as trustworthy entities, creating a sense of urgency or offering "too good to be true" rewards. Always verify the source!
+            </p>
+          </div>
+
+          <div style={{ marginBottom: '1.5rem', backgroundColor: '#f8fafc', padding: '1rem', borderRadius: '0.5rem', border: '1px solid #e2e8f0' }}>
+            <p style={{ fontWeight: 'bold', color: '#1e293b', marginBottom: '0.5rem' }}>How to Play:</p>
+            <ul style={{ listStyleType: 'disc', paddingLeft: '1.5rem', margin: 0, color: '#475569', fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+              <li>
+                You are running through a digital corridor. Gates with statements will appear.
+              </li>
+              <li>
+                <strong>Run LEFT</strong> for <span style={{ color: '#16a34a', fontWeight: 'bold' }}>REAL / FACT</span> (True statements, safe links).
+              </li>
+              <li>
+                <strong>Run RIGHT</strong> for <span style={{ color: '#ef4444', fontWeight: 'bold' }}>FAKE / SCAM</span> (False claims, phishing attempts).
+              </li>
+              <li>
+                Use <strong>Arrow Keys</strong> or <strong>A / D</strong> to switch lanes.
+              </li>
+            </ul>
+          </div>
+
+          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '2rem' }}>
+            <button 
+              onClick={onExit}
+              style={{
+                padding: '0.75rem 1.5rem',
+                borderRadius: '0.75rem',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                border: 'none',
+                backgroundColor: '#64748b',
+                color: 'white',
+                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                transition: 'background-color 0.2s',
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#475569'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#64748b'}
+            >
+              Exit
+            </button>
+            <button 
+              onClick={onStart}
+              style={{
+                padding: '0.75rem 1.5rem',
+                borderRadius: '0.75rem',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                border: 'none',
+                backgroundColor: '#fbbf24',
+                color: 'black',
+                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                transition: 'background-color 0.2s',
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#f59e0b'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#fbbf24'}
+            >
+              Start Running
+            </button>
+          </div>
         </div>
       </div>
     );
